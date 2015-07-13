@@ -25,3 +25,4 @@ https://github.com/Pithikos/python-websocket-server.git
 
 2.	python server.py 启动websocket的服务端
 
+![image](https://github.com/zhulangen/python-websocket-shell/blob/master/shell.jpg)
