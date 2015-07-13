@@ -1,7 +1,7 @@
 #!/bin/bash
 
 min=1
-max=10
+max=100
 while [ $min -le $max ]
 do
     echo "$min"
