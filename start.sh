@@ -1,5 +1,6 @@
 #!/bin/bash
-WORKDIR=$(dirname `readlink -f $0`)
+#WORKDIR=$(dirname `readlink -f $0`)
+WORKDIR=$(cd "$(dirname "$0")"; pwd)
 cd $WORKDIR
 
 
