@@ -22,7 +22,9 @@ https://github.com/Pithikos/python-websocket-server.git
 用法说明：
 
 1. 	将python-websocket-shell/web目录设置为网站的根目录
+2. 	修改web/index.html的列表位你自己的
+3. 	修改server.py对应的列表id和脚本路径
+4. 	./start.sh 启动websocket的服务端
 
-2.	python server.py 启动websocket的服务端
 
 ![image](https://github.com/zhulangen/python-websocket-shell/blob/master/shell.jpg)
