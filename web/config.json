@@ -12,6 +12,11 @@
 		"外网数据":{"power":1,"index":3},
 		"本地Server更新":{"power":2,"index":4},
 		"外网Server更新":{"power":1,"index":5}
+	},
+	"servershell":
+	{
+		"1":"./tool/longtime.sh"
 	}
+
 }
 

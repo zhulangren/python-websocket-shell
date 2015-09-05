@@ -4,6 +4,7 @@ import subprocess
 import os
 import time
 import sys
+import json
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	address="a new client has joined us ip:%s port:%d\n" % (client['address'])
@@ -16,7 +17,10 @@ def client_left(client, server):
 	print("Client(%d) disconnected" % client['id'])
 	f.close()
 
-cmd_dic={"1":'./tool/longtime.sh'}
+f1 = file("web/config.json")
+s = json.load(f1)
+f1.close
+cmd_dic=s['servershell']
 
 def message_dispatch(client,message):
 	global f
