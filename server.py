@@ -13,9 +13,7 @@ def new_client(client, server):
 
 # Called for every client disconnecting
 def client_left(client, server):
-	global f
 	print("Client(%d) disconnected" % client['id'])
-	f.close()
 
 f1 = file("web/config.json")
 s = json.load(f1)
@@ -23,7 +21,6 @@ f1.close
 cmd_dic=s['servershell']
 
 def message_dispatch(client,message):
-	global f
 	try:
 		pids= os.popen("ps -ef | grep %s |grep -v grep | awk '{print $2}'" % (cmd_dic[message]))
 		pids=pids.read();
@@ -51,8 +48,7 @@ def message_received(client, server, message):
 	message_dispatch(client,message)
 
 
-f = open("./websocket_server.log", 'w+')
-sys.stdout=f;
+
 PORT=8009
 server = WebsocketServer(PORT)
 server.set_fn_new_client(new_client)
