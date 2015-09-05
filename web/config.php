@@ -14,7 +14,7 @@ $config_data=json_decode($json_string);
 
 $fun_list=$config_data->shell;
 $accounts=$config_data->account;
-
+$address=$config_data->address;
 function filter_by_value ($arrayp){ 
 	Global $power;
 	$newarray=array( );

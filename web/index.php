@@ -34,7 +34,7 @@
     var ws;
     function init() {
       // Connect to Web Socket
-      ws = new WebSocket("ws://192.168.23.131:8009/");
+      ws = new WebSocket("ws://<?php echo $address?>/");
       // Set event handlers.
       ws.onopen = function() {
         output("onopen\n");
