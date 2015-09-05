@@ -26,8 +26,9 @@ https://github.com/Pithikos/python-websocket-server.git
 1. 	将python-websocket-shell/web目录设置为网站的根目录
 2. 	修改web/config.json的列表和账号为你自己的
 3. 	修改web/config.json对应的列表id和脚本路径
-4. 	./start.sh 启动websocket的服务端
-5. 	修改nginx的配置不允许访问config.json
+4. 	修改web/config.json的adrress为server.py监听的ip和端口
+5. 	./start.sh 启动websocket的服务端
+6. 	修改nginx的配置不允许访问config.json
 
 
 web目录为root的nginx配置写法如下，location后面的位置是从web的根目录开始的
