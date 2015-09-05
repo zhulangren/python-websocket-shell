@@ -29,10 +29,13 @@ https://github.com/Pithikos/python-websocket-server.git
 
 
 web目录为root的nginx配置写法如下，location后面的位置是从web的根目录开始的
+
 	location =/config.json{ 
 		return 404; 
 	} 
+	
 apache的配置请自行百度
+
 之所以没选择数据库来配置只是为了让网站更容易配置，本项目的初衷就是为了更方便的让普通用户访问脚本
 
 ![image](https://github.com/zhulangen/python-websocket-shell/blob/master/shell.jpg)
