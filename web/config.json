@@ -2,7 +2,7 @@
 {
 	"account":
 	{
-		"zhulangren@gmail.com" : {"passwd":"123456","power":2},
+		"zhulangren@gmail.com" : {"passwd":"123456","power":1},
     	"guest" :  {"passwd":"123456","power":1}
 	},
 	"shell":

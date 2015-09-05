@@ -1,5 +1,21 @@
 <!DOCTYPE html>
+  <?php
+    header("Content-Type: text/html;charset=utf-8");
+    require_once('config.php');  
+    session_start();
 
+    if(isset($_POST['loginoutbtn']))
+    {
+      $_SESSION['islogin']=false;
+      header("location: login.html");
+    }
+
+
+    if(!isset($_SESSION['islogin'])||$_SESSION['islogin']==false)
+    {
+      header("location: login.html");
+    }
+  ?>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8">
@@ -12,6 +28,9 @@
     <script src="./bootstrap/js/jquery-2.1.4.js"></script>
     <script src="./bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+
+
+    
     var ws;
     function init() {
       // Connect to Web Socket
@@ -19,6 +38,7 @@
       // Set event handlers.
       ws.onopen = function() {
         output("onopen\n");
+        ws.send("account:"+"<?php echo $_SESSION['account'];?>");
       };
       
       ws.onmessage = function(e) {
@@ -71,23 +91,7 @@
 
   </script>
 
-  <?php
-    header("Content-Type: text/html;charset=utf-8");
-    require_once('config.php');  
-    session_start();
 
-    if(isset($_POST['loginoutbtn']))
-    {
-      $_SESSION['islogin']=false;
-      header("location: login.html");
-    }
-
-
-    if(!isset($_SESSION['islogin'])||$_SESSION['islogin']==false)
-    {
-      header("location: login.html");
-    }
-  ?>
 
   </head>
   <body class="center" onload="init();">
