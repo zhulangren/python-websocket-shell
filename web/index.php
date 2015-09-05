@@ -73,6 +73,7 @@
 
   <?php
     header("Content-Type: text/html;charset=utf-8");
+    require_once('config.php');  
     session_start();
 
     if(isset($_POST['loginoutbtn']))
@@ -94,38 +95,28 @@
 
 <h1>远程脚本</h1>
 
-
-
 <form onsubmit="onSubmit(); return false;" name="from1">
-
-<div class="input-group">
-  <select id="input" class="form-control">
-    <option value="1">IOS</option>
-    <option value="2">Android</option>
-    <option value="3">本地数据</option>
-    <option value="4">外网数据</option>
-    <option value="5">本地Server更新</option>
-    <option value="6">外网Server更新</option>
-  </select>
-       <span class="input-group-btn">
+    <div class="input-group">
+      <select id="input" class="form-control">
+      <?php
+      $shell=get_my_list();
+      foreach ($shell as $key => $value) {
+        echo "<option value=$value>$key</option>";
+      }
+      ?>
+        
+      </select>
+      <span class="input-group-btn">
         <input class="btn btn-default" type="submit" value="执行">
-    	<button type="button" class="btn btn-warning" onclick="init(); return false;">连接</button>
-    	<button type="button" class="btn btn-danger" onclick="onCloseClick(); return false;">断开</button>
-
+        <button type="button" class="btn btn-warning" onclick="init(); return false;">连接</button>
+        <button type="button" class="btn btn-danger" onclick="onCloseClick(); return false;">断开</button>
       </span>
-  </div>
-  </form>
-
-
-
-
-
-
+    </div>
+</form>
 
 	<textarea id="log" class="form-control" rows="20"></textarea>
 	<div  class="text-left">
 	    <button type="button" class="btn btn-danger" onclick="onClearClick(); return false;">Clear</button>
-
 	    <button type="button" class="btn btn-danger" id="loginoutbtn">退出登陆</button>
 	</div>
 

@@ -1,0 +1,17 @@
+
+{
+	"account":
+	{
+		"zhulangren@gmail.com" : {"passwd":"123456","power":2},
+    	"guest" :  {"passwd":"123456","power":1}
+	},
+	"shell":
+	{
+		"Android":{"power":1,"index":1},
+		"本地数据":{"power":1,"index":2},
+		"外网数据":{"power":1,"index":3},
+		"本地Server更新":{"power":2,"index":4},
+		"外网Server更新":{"power":1,"index":5}
+	}
+}
+

@@ -6,40 +6,46 @@ if(isset($_SESSION['account']))
 {
   $account=$_SESSION['account'];
 }
-$accounts = [
-    "zhulangren@gmail.com" => ["passwd"=>"123456","power"=>1],
-    "guest" =>  ["passwd"=>"123456","power"=>1],
-];
 
-$fun_list=[
-"Android"=>1,
-"本地数据"=>1,
-"外网数据"=>1,
-"本地Server更新"=>2,
-"外网Server更新"=>1,
-];
 
-$acc=$accounts[$account];
-$power=$acc["power"];
-function filterp($var)
-{
+$filename = "./config.json";
+$json_string = file_get_contents($filename);
+$config_data=json_decode($json_string);
+
+$fun_list=$config_data->shell;
+$accounts=$config_data->account;
+
+function filter_by_value ($arrayp){ 
 	Global $power;
-    return($var >=$power);
-}
+	$newarray=array( );
+	foreach ($arrayp as $key => $val) 
+	{
+		if($val->power >=$power)
+		{
+			$newarray[$key]=$val->index;
+		}
+	}
+	return $newarray;
+    
+} 
+
+
+$acc=$accounts->$account;
+$power=$acc->power;
 
 function get_my_list()
 {
 	Global $fun_list;
-	return array_filter($fun_list,"filterp");
+	return filter_by_value($fun_list);
 }
 function check_login($accountp,$pwd)
 {
 	Global $accounts;
-	if(!isset($accounts[$accountp]))
+	if(!isset($accounts->$accountp))
 	{
 		return false;
 	}
-	if($accounts[$accountp]['passwd'] !=$pwd)
+	if($accounts->$accountp->passwd !=$pwd)
 	{
 		return false;
 	}
