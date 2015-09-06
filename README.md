@@ -19,6 +19,7 @@ https://github.com/Pithikos/python-websocket-server.git
 此前的做法一直是winscp或putty脚本来实现，缺点是不安全，账户和密码都在明文的脚本里边放着
 
 本项目解决了这个问题，普通用户通过点击网页就可以完成执行命令的操作了
+跟jenkinsde的功能可能有重合，有时间了我去试下，不过这个项目更轻便一些
 
 
 用法说明：
