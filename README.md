@@ -30,7 +30,8 @@ https://github.com/Pithikos/python-websocket-server.git
 5. 	./start.sh 启动websocket的服务端
 6. 	修改nginx的配置不允许访问config.json
 
-
+启动服务 ./start.sh
+停止服务 ./start.sh stop
 web目录为root的nginx配置写法如下，location后面的位置是从web的根目录开始的
 
 	location =/config.json{ 
