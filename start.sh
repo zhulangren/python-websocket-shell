@@ -33,7 +33,7 @@ function start()
 	#切换到脚本所在目录
 	cd $WORKDIR
 	rm debug.log
-	nohup python -u $WORKDIR/server.py > ./debug.log 2>&1 &
+	nohup python -u $WORKDIR/$appname.py > ./debug.log 2>&1 &
 	echo "server is start"
 }
 
