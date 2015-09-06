@@ -44,16 +44,24 @@ def message_received(client, server, message):
 	if len(message) > 200:
 		message = message[:200]+'..'
 	if(message.startswith('account')):
-
 		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		tokenstr=message.split('|')
+		if(len(tokenstr)<4):
+			print("%s Error format \n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			return;
+
 		token=tokenstr[3]
+		ptime=int(tokenstr[2])
+		if(abs( ptime-time.time()) > 300):
+			print("%s timeout time1:%d,time2:%d \n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())) ,ptime,time.time()) )
+			return;
+
 		account=tokenstr[1]
 		tokenstr="%s%s%s" % (bison_key,tokenstr[1],tokenstr[2])
 		m=hashlib.md5()
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
-		print("token:%s,ptoken:%s,str:%s\n" % (token,ptoken, tokenstr))
+		print("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
 		if(ptoken==token):
 			client['account']=account
 			client['islogin']=True
