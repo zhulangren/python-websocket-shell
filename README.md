@@ -32,6 +32,7 @@ https://github.com/Pithikos/python-websocket-server.git
 4. 	修改web/config.json的adrress为server.py监听的ip和端口
 5. 	./start.sh 启动websocket的服务端
 6. 	修改nginx的配置不允许访问config.json
+7. 	chmod 777 web/webdisk.log 为了能让php有写这个文件的权限
 
 启动服务 ./start.sh
 
