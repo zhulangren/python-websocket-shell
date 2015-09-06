@@ -7,7 +7,6 @@ if(isset($_SESSION['account']))
   $account=$_SESSION['account'];
 }
 
-
 $filename = "./config.json";
 $json_string = file_get_contents($filename);
 $config_data=json_decode($json_string);
@@ -49,6 +48,8 @@ function check_login($accountp,$pwd)
 	{
 		return false;
 	}
+	
+
 	return true;
 }
 

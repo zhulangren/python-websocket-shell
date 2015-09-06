@@ -14,9 +14,19 @@ if(isset($_POST['loginoutbtn']))
 	$logger->debug("login");
 	$email = $_POST[ 'email'];    
 	$_SESSION['account']=$email;
+
+
+
 	if(check_login($email,$_POST[ 'password']))
 	{
+		$bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		$_SESSION['islogin']=true;
+		$_SESSION['time']=time();
+		$tokenstr="${bison_key}${_SESSION['account']}${_SESSION['time']}";
+		$token=md5($tokenstr);
+		$logger->debug($tokenstr);
+		$logger->debug($token);
+		$_SESSION['token']="account|${_SESSION['account']}|${_SESSION['time']}|$token";
 		header("location: index.php");
 	}else
 	{

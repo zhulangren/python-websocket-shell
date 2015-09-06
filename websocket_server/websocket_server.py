@@ -114,7 +114,8 @@ class WebsocketServer(ThreadingMixIn, TCPServer, API):
 		client={
 			'id'      : self.id_counter,
 			'handler' : handler,
-			'address' : handler.client_address
+			'address' : handler.client_address,
+			'islogin' : False
 		}
 		self.clients.append(client)
 		self.new_client(client, self)

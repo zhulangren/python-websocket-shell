@@ -2,7 +2,6 @@
   <?php
     header("Content-Type: text/html;charset=utf-8");
     require_once('config.php');  
-    session_start();
 
     if(isset($_POST['loginoutbtn']))
     {
@@ -38,7 +37,7 @@
       // Set event handlers.
       ws.onopen = function() {
         output("onopen\n");
-        ws.send("account:"+"<?php echo $_SESSION['account'];?>");
+        ws.send("account:"+"<?php echo $_SESSION['token'];?>");
       };
       
       ws.onmessage = function(e) {

@@ -5,6 +5,7 @@ import os
 import time
 import sys
 import json
+import hashlib
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	address="a new client has joined us ip:%s port:%d\n" % (client['address'])
@@ -43,8 +44,24 @@ def message_received(client, server, message):
 	if len(message) > 200:
 		message = message[:200]+'..'
 	if(message.startswith('account')):
-		client['account']=message.strip('account:')
+
+		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
+		tokenstr=message.split('|')
+		token=tokenstr[3]
+		account=tokenstr[1]
+		tokenstr="%s%s%s" % (bison_key,tokenstr[1],tokenstr[2])
+		m=hashlib.md5()
+		m.update(tokenstr)
+		ptoken=m.hexdigest()
+		print("token:%s,ptoken:%s,str:%s\n" % (token,ptoken, tokenstr))
+		if(ptoken==token):
+			client['account']=account
+			client['islogin']=True
 		return
+	if(client['islogin']==False):
+		print("%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		server.send_message(client,"%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		return	
 	message_dispatch(client,message)
 
 
