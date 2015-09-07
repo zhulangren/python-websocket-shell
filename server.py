@@ -41,7 +41,10 @@ def message_dispatch(client,message,issingle):
 			server.send_message(client,logstr)
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
 			while subp.poll()==None:
-			    server.send_message(client,subp.stdout.readline())
+				for line in iter(subp.stdout.readline,''):
+			    		server.send_message(client,line)
+			
+
 		else:
 			server.send_message(client,"进程已经在运行了，请等待执行完成 %s!!!\n" % message)		
 	except Exception as e:
