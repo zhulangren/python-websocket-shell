@@ -29,22 +29,21 @@ def get_index_power(index):
 			return shell_dic[k]['power']
 	return 0
 
-def message_dispatch(client,message):
+def message_dispatch(client,message,issingle):
 	try:
-		pids= os.popen("ps -ef | grep %s |grep -v grep | awk '{print $2}'" % (cmd_dic[message]))
-		pids=pids.read();
-		if(pids==""):
-			if(cmd_dic.has_key(message)):
-				logstr="%s account:%s ip:%s cmd:%s\n" %( time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),client['account'],client['address'],cmd_dic[message])
-				print(logstr)
-				server.send_message(client,logstr)
-				subp=subprocess.Popen(cmd_dic[message],shell=True,stdout=subprocess.PIPE)
-				while subp.poll()==None:
-				    server.send_message(client,subp.stdout.readline())
-			else:
-				server.send_message(client,"key don't exist!!!\n")
+		pids=""
+		if(issingle==True):
+			pids= os.popen("ps -ef | grep %s |grep -v grep | awk '{print $2}'" % (message))
+			pids=pids.read()
+		if(pids=="" or issingle==False):
+			logstr="%s account:%s ip:%s cmd:%s\n" %( time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),client['account'],client['address'],message)
+			print(logstr)
+			server.send_message(client,logstr)
+			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
+			while subp.poll()==None:
+			    server.send_message(client,subp.stdout.readline())
 		else:
-			server.send_message(client,"进程已经在运行了，请等待执行完成!!!\n")		
+			server.send_message(client,"进程已经在运行了，请等待执行完成 %s!!!\n" % message)		
 	except Exception as e:
 			print("ERROR: message_dispatch: "+str(e))
 # Called when a client sends a message
@@ -81,11 +80,37 @@ def message_received(client, server, message):
 		return	
 	#print("p1:%d,p2:%d \n" %(get_index_power(int(message)),client['power']))
 	#检测账号是否有权限执行这个命令	
-	if get_index_power(int(message))!=client['power']:
-		print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
-		server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
-		return
-	message_dispatch(client,message)
+	bison_str=message.split('@:')
+	if(len(bison_str)<2):
+			print("%s Error format %s\n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),message))
+			return;
+
+	bison_id=bison_str[0]
+	bison_cmd=bison_str[1]
+	issingle=False
+	if bison_id=='shell':
+		issingle=True
+		shell_power=get_index_power(int(bison_cmd))
+		if cmd_dic.has_key(bison_cmd):
+			bison_cmd=cmd_dic[bison_cmd]
+		else:
+			print("%s don't have the shell %s!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),bison_str[1]))
+			server.send_message(client,"%s don't have the shell!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			return
+
+		if shell_power!=client['power']:
+			print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			return
+	elif bison_id=='cmd':
+		if client['power']!=1:
+			print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			return
+
+#todo 禁止执行rm，mv，delete passwd命令
+
+	message_dispatch(client,bison_cmd,issingle)
 
 
 

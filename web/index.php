@@ -68,7 +68,7 @@
     function onSubmit() {
       var input = document.getElementById("input");
       // You can send message to the Web Socket using ws.send.
-      ws.send(input.value);
+      ws.send("shell@:"+input.value);
       output("send: " + input.value+"\n");
     }
     
@@ -90,7 +90,7 @@
     function onCmd() {
       var input = document.getElementById("cmd");
       // You can send message to the Web Socket using ws.send.
-      ws.send(input.value);
+      ws.send("cmd@:" +input.value);
       output("send: " + input.value+"\n");
     }
 
