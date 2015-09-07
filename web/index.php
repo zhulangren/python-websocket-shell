@@ -87,6 +87,12 @@
       log.value = escaped + log.value ;
     }
 
+    function onCmd() {
+      var input = document.getElementById("cmd");
+      // You can send message to the Web Socket using ws.send.
+      ws.send(input.value);
+      output("send: " + input.value+"\n");
+    }
 
   </script>
 
@@ -122,6 +128,25 @@
 	    <button type="button" class="btn btn-danger" onclick="onClearClick(); return false;">Clear</button>
 	    <button type="button" class="btn btn-danger" id="loginoutbtn">退出登陆</button>
 	</div>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+    <span class="sr-only">100% Complete</span>
+  </div>
+</div>
+
+
+<form onsubmit="onCmd(); return false;" name="from2">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">#</span>
+    <input id="cmd" type="text" class="form-control" placeholder="type your cmd" aria-describedby="basic-addon1">
+     <span class="input-group-btn">
+        <button class="btn btn-danger" type="submit">执行</button>
+      </span>
+
+  </div>
+
+</form>
 
   </body>
 </html>
