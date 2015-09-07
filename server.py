@@ -20,6 +20,14 @@ f1 = file("web/config.json")
 s = json.load(f1)
 f1.close
 cmd_dic=s['servershell']
+account_dic=s['account']
+shell_dic=s['shell']
+#根据账号的id返回账号对应的权限值
+def get_index_power(index):
+	for k in shell_dic.keys():
+		if shell_dic[k]['index'] ==index:
+			return shell_dic[k]['power']
+	return 0
 
 def message_dispatch(client,message):
 	try:
@@ -64,12 +72,19 @@ def message_received(client, server, message):
 		print("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
 		if(ptoken==token):
 			client['account']=account
+			client['power']=account_dic[account]['power'];
 			client['islogin']=True
 		return
 	if(client['islogin']==False):
 		print("%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 		server.send_message(client,"%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 		return	
+	#print("p1:%d,p2:%d \n" %(get_index_power(int(message)),client['power']))
+	#检测账号是否有权限执行这个命令	
+	if get_index_power(int(message))!=client['power']:
+		print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		return
 	message_dispatch(client,message)
 
 
