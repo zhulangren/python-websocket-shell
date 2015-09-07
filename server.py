@@ -101,13 +101,13 @@ def message_received(client, server, message):
 			server.send_message(client,"%s don't have the shell!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 			return
 
-		if shell_power!=client['power']:
+		if shell_power!=client['power'] and client['power'] !=0:
 			print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 			return
 	elif bison_id=='cmd':
-		if client['power']!=1:
-			print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		if client['power']!=0:
+			print("%s don't have the power %s %d!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),client['account'],client['power']))
 			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
 			return
 

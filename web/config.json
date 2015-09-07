@@ -3,8 +3,9 @@
 	"address":"192.168.23.131:8009",
 	"account":
 	{
-		"zhulangren@gmail.com" : {"passwd":"123456","power":1},
-    	"guest" :  {"passwd":"123456","power":1}
+		"zhulangren@gmail.com" : {"passwd":"123456","power":0},
+		"abc@gmail.com" : {"passwd":"123456","power":1},
+		"guest@gmail.com" :  {"passwd":"123456","power":2}
 	},
 	"shell":
 	{
