@@ -6,6 +6,12 @@ import time
 import sys
 import json
 import hashlib
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
+
+
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	address="a new client has joined us ip:%s port:%d\n" % (client['address'])
@@ -22,6 +28,9 @@ f1.close
 cmd_dic=s['servershell']
 account_dic=s['account']
 shell_dic=s['shell']
+exclude_cmd=s['exclude_cmd']
+
+
 
 #对log进行简单封装
 def bison_log(client,str):
@@ -29,6 +38,13 @@ def bison_log(client,str):
 	server.send_message(client,logstr)
 	print(logstr)
 
+#检查超级用户有没有执行非法指令
+def check_exclude_cmd(client, cmd):
+	for ex in exclude_cmd:
+		if(cmd.count(ex) >0):
+			bison_log(client,"非法命令：%s" % ex)
+			return True
+	return False
 
 #根据账号的id返回账号对应的权限值
 def get_index_power(index):
@@ -115,10 +131,12 @@ def message_received(client, server, message):
 			bison_log(client,"don't have the power %s %d!!!!" % (client['account'],client['power']))
 			return
 
-#todo 禁止执行rm，mv，delete passwd命令
 
-	message_dispatch(client,bison_cmd,issingle)
-
+	if (check_exclude_cmd(client, bison_cmd)==False):
+		message_dispatch(client,bison_cmd,issingle)
+	else:
+		bison_log(client,"命令包含非法字符")
+		return
 
 
 PORT=8009

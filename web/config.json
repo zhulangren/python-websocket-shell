@@ -18,7 +18,9 @@
 	"servershell":
 	{
 		"1":"./tool/longtime.sh"
-	}
+	},
+	"exclude_cmd":["scp","ssh","rm","delete","drop","empty","mv","remove","userdel",
+	"useradd","groupadd","passwd","sudo","cp","php","nginx","apache","kill","reboot","halt","poweroff"]
 
 }
 
