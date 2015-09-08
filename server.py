@@ -44,7 +44,7 @@ def message_dispatch(client,message,issingle):
 			pids= os.popen("ps -ef | grep %s |grep -v grep | awk '{print $2}'" % (message))
 			pids=pids.read()
 		if(pids=="" or issingle==False):
-			logstr="account:%s ip:%s cmd:%s\n" %(client['account'],client['address'],message)
+			logstr="account:%s ip:%s cmd:%s" %(client['account'],client['address'],message)
 			bison_log(client,logstr)
 			server.send_message(client,logstr)
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
@@ -65,7 +65,7 @@ def message_received(client, server, message):
 		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		tokenstr=message.split('|')
 		if(len(tokenstr)<4):
-			bison_log(client,"Error format \n")
+			bison_log(client,"Error format")
 			return;
 
 		token=tokenstr[3]
@@ -92,7 +92,7 @@ def message_received(client, server, message):
 	#检测账号是否有权限执行这个命令	
 	bison_str=message.split('@:')
 	if(len(bison_str)<2):
-			bison_log(client," Error format %s\n" %  message)
+			bison_log(client," Error format %s" %  message)
 			return;
 
 	bison_id=bison_str[0]
@@ -104,15 +104,15 @@ def message_received(client, server, message):
 		if cmd_dic.has_key(bison_cmd):
 			bison_cmd=cmd_dic[bison_cmd]
 		else:
-			bison_log(client,"don't have the shell %s!!!!\n" % (bison_str[1]))
+			bison_log(client,"don't have the shell %s!!!!" % (bison_str[1]))
 			return
 
 		if shell_power!=client['power'] and client['power'] !=0:
-			bison_log(client,"don't have the power!!!!\n")
+			bison_log(client,"don't have the power!!!!")
 			return
 	elif bison_id=='cmd':
 		if client['power']!=0:
-			bison_log(client,"don't have the power %s %d!!!!\n" % (client['account'],client['power']))
+			bison_log(client,"don't have the power %s %d!!!!" % (client['account'],client['power']))
 			return
 
 #todo 禁止执行rm，mv，delete passwd命令
