@@ -22,6 +22,14 @@ f1.close
 cmd_dic=s['servershell']
 account_dic=s['account']
 shell_dic=s['shell']
+
+#对log进行简单封装
+def bison_log(client,str):
+	logstr="%s %s\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),str)
+	server.send_message(client,logstr)
+	print(logstr)
+
+
 #根据账号的id返回账号对应的权限值
 def get_index_power(index):
 	for k in shell_dic.keys():
@@ -36,8 +44,8 @@ def message_dispatch(client,message,issingle):
 			pids= os.popen("ps -ef | grep %s |grep -v grep | awk '{print $2}'" % (message))
 			pids=pids.read()
 		if(pids=="" or issingle==False):
-			logstr="%s account:%s ip:%s cmd:%s\n" %( time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),client['account'],client['address'],message)
-			print(logstr)
+			logstr="account:%s ip:%s cmd:%s" %(client['account'],client['address'],message)
+			bison_log(client,logstr)
 			server.send_message(client,logstr)
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
 			while subp.poll()==None:
@@ -57,13 +65,13 @@ def message_received(client, server, message):
 		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		tokenstr=message.split('|')
 		if(len(tokenstr)<4):
-			print("%s Error format \n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			bison_log(client,"Error format")
 			return;
 
 		token=tokenstr[3]
 		ptime=int(tokenstr[2])
 		if(abs( ptime-time.time()) > 300):
-			print("%s timeout time1:%d,time2:%d \n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())) ,ptime,time.time()) )
+			bison_log(client,"timeout time1:%d,time2:%d" %  (ptime,time.time()) )
 			return;
 
 		account=tokenstr[1]
@@ -71,21 +79,20 @@ def message_received(client, server, message):
 		m=hashlib.md5()
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
-		print("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
+		#bison_log(client,"token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
 		if(ptoken==token):
 			client['account']=account
 			client['power']=account_dic[account]['power'];
 			client['islogin']=True
 		return
 	if(client['islogin']==False):
-		print("%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
-		server.send_message(client,"%s you must login!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+		bison_log(client,"you must login!!!!")
 		return	
-	#print("p1:%d,p2:%d \n" %(get_index_power(int(message)),client['power']))
+	#bison_log("p1:%d,p2:%d \n" %(get_index_power(int(message)),client['power']))
 	#检测账号是否有权限执行这个命令	
 	bison_str=message.split('@:')
 	if(len(bison_str)<2):
-			print("%s Error format %s\n" %  (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),message))
+			bison_log(client," Error format %s" %  message)
 			return;
 
 	bison_id=bison_str[0]
@@ -97,18 +104,15 @@ def message_received(client, server, message):
 		if cmd_dic.has_key(bison_cmd):
 			bison_cmd=cmd_dic[bison_cmd]
 		else:
-			print("%s don't have the shell %s!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),bison_str[1]))
-			server.send_message(client,"%s don't have the shell!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			bison_log(client,"don't have the shell %s!!!!" % (bison_str[1]))
 			return
 
 		if shell_power!=client['power'] and client['power'] !=0:
-			print("%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
-			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			bison_log(client,"don't have the power!!!!")
 			return
 	elif bison_id=='cmd':
 		if client['power']!=0:
-			print("%s don't have the power %s %d!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),client['account'],client['power']))
-			server.send_message(client,"%s don't have the power!!!!\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time()))))
+			bison_log(client,"don't have the power %s %d!!!!" % (client['account'],client['power']))
 			return
 
 #todo 禁止执行rm，mv，delete passwd命令
