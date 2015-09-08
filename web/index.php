@@ -129,6 +129,8 @@
 	    <button type="button" class="btn btn-danger" id="loginoutbtn">退出登陆</button>
 	</div>
 
+<?php 
+$super_form=<<<EOF
 <div class="progress">
   <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
     <span class="sr-only">100% Complete</span>
@@ -145,8 +147,17 @@
       </span>
 
   </div>
-
 </form>
+EOF;
+
+if($power==0)
+{
+  echo $super_form;
+}
+
+?>
+
+
 
   </body>
 </html>
