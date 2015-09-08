@@ -1,7 +1,7 @@
 Websocket Shell
 =======================
  web目录可以部署在任意的http服务器上
- web和python共享一个config.json配置文件所以尽量部署在同一台机器上否则你要维护连个位置的配置文件一致
+ web和python共享一个config.json配置文件所以尽量部署在同一台机器上否则你要维护两个位置的配置文件一致
  
  因为打开页面的浏览器需要跟server.py运行服务器在一个内网，因为他们需要建立socket链接
  客户端的JavaScript通过websocket跟服务端的python建立链接，发送命令的id，服务端寻找id对应的命令然后执行
