@@ -66,7 +66,7 @@ function indent ($json) {
 	return $result; 
 
 } 
-
+$bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad";
 function regestuser($email,$passwd)
 {
 	Global $accounts;
@@ -76,10 +76,14 @@ function regestuser($email,$passwd)
 		echo "0";
 		return 0;
 	}
+	Global $bison_key;
+	$mypwd="${bison_key}${email}${passwd}";
+	$mypwd=md5($mypwd);
+
 
 	$myfile = fopen("./config.json", "w");
 	$ob=new account_ob();
-	$ob->passwd=$passwd;
+	$ob->passwd=$mypwd;
 	$ob->power=2;
 	$accounts->$email=$ob;
 	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
@@ -121,7 +125,10 @@ function check_login($accountp,$pwd)
 	{
 		return false;
 	}
-	if($accounts->$accountp->passwd !=$pwd)
+	Global $bison_key;
+	$mypwd="${bison_key}${accountp}${pwd}";
+	$mypwd=md5($mypwd);
+	if($accounts->$accountp->passwd !=$mypwd)
 	{
 		return false;
 	}

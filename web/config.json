@@ -1,27 +1,68 @@
-
 {
-	"address":"192.168.23.131:8009",
-	"account":
-	{
-		"zhulangren@gmail.com" : {"passwd":"123456","power":0},
-		"abc@gmail.com" : {"passwd":"123456","power":1},
-		"guest@gmail.com" :  {"passwd":"123456","power":2}
-	},
-	"shell":
-	{
-		"Android":{"power":1,"index":1},
-		"本地数据":{"power":1,"index":2},
-		"外网数据":{"power":1,"index":3},
-		"本地Server更新":{"power":2,"index":4},
-		"外网Server更新":{"power":1,"index":5}
-	},
-	"servershell":
-	{
-		"1":"./tool/longtime.sh"
-	},
-	"exclude_cmd":["scp","ssh","rm","delete","drop","empty","mv","remove","userdel",
-	"useradd","groupadd","passwd","sudo","cp","php","nginx","apache","kill","reboot","halt","poweroff","config.json",
-	"vim","vi"]
-
+ "address":"192.168.23.131:8009",
+ "account":{
+  "zhulangren@gmail.com":{
+   "power":0,
+   "passwd":"664933f1166d868ba2a3e941936563c7"
+  },
+  "abc@gmail.com":{
+   "power":1,
+   "passwd":"2033e2f959353307488e86af0a567f8a"
+  },
+  "guest@gmail.com":{
+   "power":2,
+   "passwd":"fbe2747b739feca0509c6aca382d57ab"
+  }
+ },
+ "shell":{
+  "Android":{
+   "power":1,
+   "index":1
+  },
+  "本地数据":{
+   "power":1,
+   "index":2
+  },
+  "外网数据":{
+   "power":1,
+   "index":3
+  },
+  "本地Server更新":{
+   "power":2,
+   "index":4
+  },
+  "外网Server更新":{
+   "power":1,
+   "index":5
+  }
+ },
+ "servershell":{
+  "1":".\/tool\/longtime.sh"
+ },
+ "exclude_cmd":[
+  "scp",
+  "ssh",
+  "rm",
+  "delete",
+  "drop",
+  "empty",
+  "mv",
+  "remove",
+  "userdel",
+  "useradd",
+  "groupadd",
+  "passwd",
+  "sudo",
+  "cp",
+  "php",
+  "nginx",
+  "apache",
+  "kill",
+  "reboot",
+  "halt",
+  "poweroff",
+  "config.json",
+  "vim",
+  "vi"
+ ]
 }
-
