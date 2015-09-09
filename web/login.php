@@ -1,9 +1,21 @@
 <?php    
 header("Content-Type: text/html;charset=utf-8");
-require "config.php";
 require_once('log4php/Logger.php');  
+require "config.php";
+
 $logger = Logger::getRootLogger();
 Logger::configure(dirname(__FILE__).'/log4php.properties');
+
+//注册
+if(isset($_POST['emailp']) && isset($_POST['passwordp']))
+{
+		$logger->debug("abc:". $_POST['emailp'].$_POST['passwordp']);
+		$res= regestuser( $_POST['emailp'],$_POST['passwordp']);
+		die(0);
+}
+
+
+
 if(isset($_POST['loginoutbtn']))
 {
 	$logger->debug("loginout");
