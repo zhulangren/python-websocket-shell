@@ -6,6 +6,9 @@ import time
 import sys
 import json
 import hashlib
+import logging
+logging.basicConfig(filename='webshell.log',level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 default_encoding = 'utf-8'
 if sys.getdefaultencoding() != default_encoding:
     reload(sys)
@@ -32,17 +35,13 @@ exclude_cmd=s['exclude_cmd']
 
 
 
-#对log进行简单封装
-def bison_log(client,str):
-	logstr="%s %s\n" % (time.strftime( '%Y-%m-%d %X',time.localtime(time.time())),str)
-	server.send_message(client,logstr)
-	print(logstr)
+
 
 #检查超级用户有没有执行非法指令
 def check_exclude_cmd(client, cmd):
 	for ex in exclude_cmd:
 		if(cmd.count(ex) >0):
-			bison_log(client,"非法命令：%s" % ex)
+			logging.debug("非法命令：%s" % ex)
 			return True
 	return False
 
@@ -61,7 +60,7 @@ def message_dispatch(client,message,issingle):
 			pids=pids.read()
 		if(pids=="" or issingle==False):
 			logstr="account:%s ip:%s cmd:%s" %(client['account'],client['address'],message)
-			bison_log(client,logstr)
+			logging.debug(logstr)
 			server.send_message(client,logstr)
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
 			while subp.poll()==None:
@@ -81,13 +80,13 @@ def message_received(client, server, message):
 		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		tokenstr=message.split('|')
 		if(len(tokenstr)<4):
-			bison_log(client,"Error format")
+			logging.debug("Error format")
 			return;
 
 		token=tokenstr[3]
 		ptime=int(tokenstr[2])
 		if(abs( ptime-time.time()) > 300):
-			bison_log(client,"timeout time1:%d,time2:%d" %  (ptime,time.time()) )
+			logging.debug("timeout time1:%d,time2:%d" %  (ptime,time.time()) )
 			return;
 
 		account=tokenstr[1]
@@ -95,20 +94,20 @@ def message_received(client, server, message):
 		m=hashlib.md5()
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
-		#bison_log(client,"token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
+		#logging.debug("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
 		if(ptoken==token):
 			client['account']=account
 			client['power']=account_dic[account]['power'];
 			client['islogin']=True
 		return
 	if(client['islogin']==False):
-		bison_log(client,"you must login!!!!")
+		logging.debug("you must login!!!!")
 		return	
-	#bison_log("p1:%d,p2:%d \n" %(get_index_power(int(message)),client['power']))
+	#logging.debug(p2:%d \n" %(get_index_power(int(message)),client['power']))
 	#检测账号是否有权限执行这个命令	
 	bison_str=message.split('@:')
 	if(len(bison_str)<2):
-			bison_log(client," Error format %s" %  message)
+			logging.debug(" Error format %s" %  message)
 			return;
 
 	bison_id=bison_str[0]
@@ -120,22 +119,22 @@ def message_received(client, server, message):
 		if cmd_dic.has_key(bison_cmd):
 			bison_cmd=cmd_dic[bison_cmd]
 		else:
-			bison_log(client,"don't have the shell %s!!!!" % (bison_str[1]))
+			logging.debug("don't have the shell %s!!!!" % (bison_str[1]))
 			return
 
 		if shell_power!=client['power'] and client['power'] !=0:
-			bison_log(client,"don't have the power!!!!")
+			logging.debug("don't have the power!!!!")
 			return
 	elif bison_id=='cmd':
 		if client['power']!=0:
-			bison_log(client,"don't have the power %s %d!!!!" % (client['account'],client['power']))
+			logging.debug("don't have the power %s %d!!!!" % (client['account'],client['power']))
 			return
 
 
 	if (check_exclude_cmd(client, bison_cmd)==False):
 		message_dispatch(client,bison_cmd,issingle)
 	else:
-		bison_log(client,"命令包含非法字符")
+		logging.debug("命令包含非法字符")
 		return
 
 
