@@ -24,6 +24,7 @@
 <body>
 <div class="modal-footer" role="group">
           <button class="btn btn-primary btn-group-sm btn-danger" data-toggle="modal" data-target="#myModal">注册</button>
+          <button class="btn btn-primary btn-group-sm btn-warning" data-toggle="modal" data-target="#Changpwd">修改密码</button>
 </div>
 <div class="container">
       <form class="form-signin" role="form" action="login.php" method= 'POST'>
@@ -108,6 +109,86 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="Changpwd" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="false">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改密码
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    
+                    <div class="form-group">
+                        <label for="email">邮箱</label><span id="emailTips" style="color: red;"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                            <input type="email" class="form-control" id="email" placeholder="输入邮箱账号">
+                        </div>
+                        <span >提示：邮箱格式为**@**</span>
+                    </div>
+                <div class="form-group">
+                        <label for="pass1">旧密码</label><span id="passoldTips" style="color: red;"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                            <input type="password" class="form-control" id="oldpass" placeholder="输入密码">
+                            <input type="text" class="form-control" id="pass1-1" placeholder="输入密码" style="display: none">
+                            <span class="input-group-addon"><span id="seePass1" class="glyphicon glyphicon-eye-close" style="cursor: pointer"></span></span>
+                        </div>
+                        <span >提示：密码长度为6-20个字符</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pass1">新密码</label><span id="pass1Tips" style="color: red;"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                            <input type="password" class="form-control" id="pass1" placeholder="输入密码">
+                            <input type="text" class="form-control" id="pass1-1" placeholder="输入密码" style="display: none">
+                            <span class="input-group-addon"><span id="seePass1" class="glyphicon glyphicon-eye-close" style="cursor: pointer"></span></span>
+                        </div>
+                        <span >提示：密码长度为6-20个字符</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass2">确认密码</label><span id="pass2Tips" style="color: red;"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                            <input type="password" class="form-control" id="pass2" placeholder="重复输入密码">
+                            <input type="text" class="form-control" id="pass2-1" placeholder="重复输入密码" style="display: none">
+                            <span class="input-group-addon"><span id="seePass2" class="glyphicon glyphicon-eye-close" style="cursor: pointer"></span></span>
+                        </div>
+                        <span >提示：重复密码须和注册密码相同</span>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox">记住我
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info"
+                        data-dismiss="modal">取消
+                </button>
+                <button type="button" id="reg" class="btn btn-success">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
 
 
 </body>
