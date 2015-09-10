@@ -93,7 +93,36 @@ function regestuser($email,$passwd)
 	return 1;
 }
 
+function change_passwd($email,$passwdold,$passwdnew)
+{
+	Global $accounts;
+	Global $config_data;
+	if(property_exists($accounts,$email)==false)
+	{//账号不存在
+		echo "0";
+		return 0;
+	}
+	Global $bison_key;
+	$mypwd="${bison_key}${email}${passwdold}";
+	$mypwd=md5($mypwd);
+	if($accounts->$email->passwd !=$mypwd)
+	{//旧密码不正确
+		echo "1";
+		return 0;
+	}
+	//修改密码
+	$mypwd="${bison_key}${email}${passwdnew}";
+	$mypwd=md5($mypwd);
+	$accounts->$email->passwd=$mypwd;
 
+	$myfile = fopen("./config.json", "w");
+	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
+	fwrite($myfile, indent($json));
+	fclose($myfile);
+	echo "2";
+	return 0;
+
+}
 
 function filter_by_value ($arrayp){ 
 	Global $power;

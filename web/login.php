@@ -9,8 +9,13 @@ Logger::configure(dirname(__FILE__).'/log4php.properties');
 //注册
 if(isset($_POST['emailp']) && isset($_POST['passwordp']))
 {
-		$logger->debug("abc:". $_POST['emailp'].$_POST['passwordp']);
 		$res= regestuser( $_POST['emailp'],$_POST['passwordp']);
+		die(0);
+}
+//修改密码
+if(isset($_POST['emailp']) && isset($_POST['passwordold']) && isset($_POST['passwordnew'] ))
+{
+		$res= change_passwd( $_POST['emailp'],$_POST['passwordold'],$_POST['passwordnew']);
 		die(0);
 }
 

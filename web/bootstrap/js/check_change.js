@@ -83,15 +83,32 @@ $(document).ready(function(){
 
 
 
-        $("#ch_changepwd").on("click",function(){
+        $("#ch_changepwdbtn").on("click",function(){
             if(ch_checkOldPass()&&ch_checkEmail()&&ch_checkPass1()&&ch_checkPass2())
             {
                 email=$("#ch_email").val();
-                password=$("#ch_pass1").val();
-                
+                ch_olpass=$("#ch_oldpass").val();
+                ch_pass1=$("#ch_pass1").val();
+                $.post("login.php",
+                    {emailp:email,passwordold:ch_olpass,passwordnew:ch_pass1},
+                    function(data,status)
+                    {
+                        if(data=="0")
+                    {
+                        alert("账号不存在");
+                    }else if (data=="1") {
+                        alert("旧密码错误");
+                    }else
+                    {
+                        window.location.reload();
+                        location.href="login.html";
+                    }
+
+                    });
 
    
-            }else{
+            }else
+            {
                 alert("请完善信息");
             }
         });
