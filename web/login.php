@@ -2,6 +2,7 @@
 header("Content-Type: text/html;charset=utf-8");
 require_once('log4php/Logger.php');  
 require "config.php";
+$bison_token_key="45a1df1c9e2656e4f4c742cf-4753775d";
 
 $logger = Logger::getRootLogger();
 Logger::configure(dirname(__FILE__).'/log4php.properties');
@@ -36,10 +37,9 @@ if(isset($_POST['loginoutbtn']))
 
 	if(check_login($email,$_POST[ 'password']))
 	{
-		$bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		$_SESSION['islogin']=true;
 		$_SESSION['time']=time();
-		$tokenstr="${bison_key}${_SESSION['account']}${_SESSION['time']}";
+		$tokenstr="${bison_token_key}${_SESSION['account']}${_SESSION['time']}";
 		$token=md5($tokenstr);
 		$logger->debug($tokenstr);
 		$logger->debug($token);

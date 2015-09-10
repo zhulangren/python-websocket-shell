@@ -1,7 +1,20 @@
 Websocket Shell
 =======================
  web目录可以部署在任意的http服务器上
- web和python共享一个config.json配置文件所以尽量部署在同一台机器上否则你要维护两个位置的配置文件一致
+
+ web客户端可以通过注册账号和修改密码修改config.json的账号的信息
+
+ python通过配置文件config.cfg配置的url路径读取config.json的内容
+
+ 在python运行期间如果有新注册账户登录就重新读取rul内容
+
+
+这里解释一下用到的两个bison_key(一定要修改成你自己的不然我能悄悄的访问你的机器，哈哈)
+
+config.php用到的key主要用来加密密码和配置数据的接口，python获取数据的时候要用到同样的key
+login.php用到的key用来和时间戳生成一个token，JavaScript拿着这个token去和python建立连接，python在校验这个token的合法性时
+需要用到同样的key
+
  
  因为打开页面的浏览器需要跟server.py运行服务器在一个内网，因为他们需要建立socket链接
  客户端的JavaScript通过websocket跟服务端的python建立链接，发送命令的id，服务端寻找id对应的命令然后执行

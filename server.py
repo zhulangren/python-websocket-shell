@@ -10,6 +10,8 @@ import logging
 import urllib2
 import urllib
 import ConfigParser
+bison_config_key="2da2d990f2abad8-f0f6d6e46556d7-9ad"
+bison_token_key="45a1df1c9e2656e4f4c742cf-4753775d"
 
 logging.basicConfig(filename='webshell.log',level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
@@ -35,8 +37,7 @@ def get_config_data():
 	data = {}
 	data['zhulangren'] = 'zhulangren'
 	data['time'] = time.time()
-	bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad"
-	tokenstr="%s%s%s" % (bison_key,data['time'],data['zhulangren'])
+	tokenstr="%s%s%s" % (bison_config_key,data['time'],data['zhulangren'])
 	m=hashlib.md5()
 	m.update(tokenstr)
 	data['token']=m.hexdigest()
@@ -93,7 +94,6 @@ def message_received(client, server, message):
 	if len(message) > 200:
 		message = message[:200]+'..'
 	if(message.startswith('account')):
-		bison_key="45a1df1c9e2656e4f4c742cf-4753775d";
 		tokenstr=message.split('|')
 		if(len(tokenstr)<4):
 			logging.debug("Error format")
@@ -106,7 +106,7 @@ def message_received(client, server, message):
 			return;
 
 		account=tokenstr[1]
-		tokenstr="%s%s%s" % (bison_key,tokenstr[1],tokenstr[2])
+		tokenstr="%s%s%s" % (bison_token_key,tokenstr[1],tokenstr[2])
 		m=hashlib.md5()
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
