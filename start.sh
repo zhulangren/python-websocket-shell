@@ -36,7 +36,8 @@ function start()
 	nohup python -u $WORKDIR/$appname.py > ./debug.log 2>&1 &
 	echo "server is start"
 }
-
+chmod 777 web/config.json
+chmod 777 web/webdisk.log
 
 case "$1" in
 		start)
