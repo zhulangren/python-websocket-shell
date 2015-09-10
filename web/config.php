@@ -2,12 +2,39 @@
 header("Content-Type: text/html;charset=utf-8");
 session_start();
 $account="guest@gmail.com";
+$bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad";
+$filename = "./config.json";
+
+if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren'] ))
+{
+	$mytime=$_POST['time'];
+	$res= [];
+	if(abs($mytime-time()) >=300)
+	{
+		$res["flag"]=-1;
+	}
+	$mytoken="${bison_key}".$mytime. $_POST['zhulangren'] ;
+	$mytoken=md5($mytoken);
+	if($mytoken !=$_POST['token'])
+	{
+		$res["flag"]=-2;
+	}else
+	{
+		$res['flag']=0;
+		$res['data']=json_decode(file_get_contents($filename));
+	}
+	print(json_encode($res,JSON_UNESCAPED_UNICODE));
+	die(0);
+}
+
+
+
+
 if(isset($_SESSION['account']))
 {
   $account=$_SESSION['account'];
 }
 
-$filename = "./config.json";
 $json_string = file_get_contents($filename);
 $config_data=json_decode($json_string);
 
@@ -66,7 +93,6 @@ function indent ($json) {
 	return $result; 
 
 } 
-$bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad";
 function regestuser($email,$passwd)
 {
 	Global $accounts;

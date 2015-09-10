@@ -7,6 +7,10 @@ import sys
 import json
 import hashlib
 import logging
+import urllib2
+import urllib
+import ConfigParser
+
 logging.basicConfig(filename='webshell.log',level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 default_encoding = 'utf-8'
@@ -25,16 +29,28 @@ def new_client(client, server):
 def client_left(client, server):
 	print("Client(%d) disconnected" % client['id'])
 
-f1 = file("web/config.json")
-s = json.load(f1)
-f1.close
-cmd_dic=s['servershell']
-account_dic=s['account']
-shell_dic=s['shell']
-exclude_cmd=s['exclude_cmd']
 
 
-
+def get_config_data():
+	data = {}
+	data['zhulangren'] = 'zhulangren'
+	data['time'] = time.time()
+	bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad"
+	tokenstr="%s%s%s" % (bison_key,data['time'],data['zhulangren'])
+	m=hashlib.md5()
+	m.update(tokenstr)
+	data['token']=m.hexdigest()
+	post_data = urllib.urlencode(data)
+	req = urllib2.urlopen(config_url, post_data)
+	content = req.read()
+	s = json.loads(content)
+	if(s['flag']==-1):
+		logging.debug("配置数据时间戳超时")
+	elif(s['flag']==-2):
+		logging.debug("配置数据密码错误")
+	else:
+		s=s['data']
+	return s
 
 
 #检查超级用户有没有执行非法指令
@@ -95,7 +111,19 @@ def message_received(client, server, message):
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
 		#logging.debug("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
+		global cmd_dic,account_dic,shell_dic,exclude_cmd
 		if(ptoken==token):
+			if(account_dic.has_key(account)==False):
+				s= get_config_data()
+				cmd_dic=s['servershell']
+				account_dic=s['account']
+				shell_dic=s['shell']
+				exclude_cmd=s['exclude_cmd']
+				logging.debug("重新获取账号配置数据")
+			if(account_dic.has_key(account)==False):
+				logging.debug("账号不存在")
+				return
+
 			client['account']=account
 			client['power']=account_dic[account]['power'];
 			client['islogin']=True
@@ -136,6 +164,16 @@ def message_received(client, server, message):
 	else:
 		logging.debug("命令包含非法字符")
 		return
+
+config=ConfigParser.ConfigParser();
+config.read('config.cfg')
+config_url=config.get("info","url")		
+s= get_config_data()
+cmd_dic=s['servershell']
+account_dic=s['account']
+shell_dic=s['shell']
+exclude_cmd=s['exclude_cmd']
+
 
 
 PORT=8009

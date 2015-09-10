@@ -12,6 +12,14 @@
   "guest@gmail.com":{
    "power":2,
    "passwd":"fbe2747b739feca0509c6aca382d57ab"
+  },
+  "zhulangren1@gmail.com":{
+   "power":2,
+   "passwd":"18ebf8e5e18d79893c4fc42babbbe071"
+  },
+  "zhulangren3@gmail.com":{
+   "power":2,
+   "passwd":"ea7734172e0fb74fa510dde48d236100"
   }
  },
  "shell":{
