@@ -1,10 +1,13 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");
+require_once('log4php/Logger.php');  
+
 session_start();
 $account="guest@gmail.com";
 $bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad";
 $filename = "./config.json";
-
+$logger = Logger::getRootLogger();
+Logger::configure(dirname(__FILE__).'/log4php.properties');
 if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren'] ))
 {
 	$mytime=$_POST['time'];
@@ -22,7 +25,7 @@ if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren']
 	{
 		$res['flag']=0;
 		$res['data']=json_decode(file_get_contents($filename));
-		$res['data']->servershell=get_server_shell($res['data']);
+		$res['data']->servershell=get_server_shell($res['data']->shell);
 	}
 	print(json_encode($res,JSON_UNESCAPED_UNICODE));
 	die(0);
@@ -168,10 +171,13 @@ function filter_by_value ($arrayp){
 
 function get_server_shell($arrayp)
 {
+	Global $logger;
 	$newarray=array( );
 	foreach ($arrayp as $key => $val) 
 	{
-		$newarray['index']=$val->shell;
+	$logger->debug("loginoussssst".$key);
+
+	$newarray[$val->index]=$val->shell;
 	}
 	return $newarray;
 }
