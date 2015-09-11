@@ -22,6 +22,7 @@ if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren']
 	{
 		$res['flag']=0;
 		$res['data']=json_decode(file_get_contents($filename));
+		$res['data']->servershell=get_server_shell($res['data']);
 	}
 	print(json_encode($res,JSON_UNESCAPED_UNICODE));
 	die(0);
@@ -163,6 +164,17 @@ function filter_by_value ($arrayp){
 	return $newarray;
     
 } 
+
+
+function get_server_shell($arrayp)
+{
+	$newarray=array( );
+	foreach ($arrayp as $key => $val) 
+	{
+		$newarray['index']=$val->shell;
+	}
+	return $newarray;
+}
 
 
 $acc=$accounts->$account;
