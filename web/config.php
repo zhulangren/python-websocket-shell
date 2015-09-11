@@ -175,9 +175,7 @@ function get_server_shell($arrayp)
 	$newarray=array( );
 	foreach ($arrayp as $key => $val) 
 	{
-	$logger->debug("loginoussssst".$key);
-
-	$newarray[$val->index]=$val->shell;
+		$newarray[$val->index]=$val->shell;
 	}
 	return $newarray;
 }
