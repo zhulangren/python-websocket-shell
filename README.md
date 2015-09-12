@@ -59,16 +59,16 @@ web目录为root的nginx配置写法如下，location后面的位置是从web的
 	
 apache的配置
 
-<Directory "/Library/WebServer/Documents">
-    Options FollowSymLinks Multiviews
-    MultiviewsMatch Any
-    AllowOverride None
-    Require all granted
-    <Files ~ "\.json$">
-       Order allow,deny
-       Deny from all
-    </Files>
-</Directory>
+	<Directory "/Library/WebServer/Documents">
+	    Options FollowSymLinks Multiviews
+	    MultiviewsMatch Any
+	    AllowOverride None
+	    Require all granted
+	    <Files ~ "\.json$">
+	       Order allow,deny
+	       Deny from all
+	    </Files>
+	</Directory>
 
 
 之所以没选择数据库来配置只是为了让网站更容易配置，本项目的初衷就是为了更方便的让普通用户访问脚本
