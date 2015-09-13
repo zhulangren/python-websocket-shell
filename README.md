@@ -73,7 +73,7 @@ apache的配置
 
 之所以没选择数据库来配置只是为了让网站更容易配置，本项目的初衷就是为了更方便的让普通用户访问脚本
 
-![image](https://github.com/zhulangen/python-websocket-shell/blob/master/shell.jpg)
+![image](https://raw.githubusercontent.com/zhulangen/python-websocket-shell/master/shell.jpg)
 
 
 **Thanks**
