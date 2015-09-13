@@ -65,7 +65,7 @@ if( isset($_POST['editaccount']) && isset($_POST['accountp']) && isset($_POST['p
 	{//修改权限
 		if(property_exists($accounts,$accountp) && $accounts->$accountp->power !=$powerp && (int)$powerp >=0)
 		{
-			$accounts->$accountp->power=$powerp;
+			$accounts->$accountp->power=(int)$powerp;
 			$haschange=true;
 		}
 	}else
@@ -95,8 +95,8 @@ if( isset($_POST['editshell']) && isset($_POST['namep'])  &&
 	if($btnp=='be')
 	{
 		$ob=new shell_ob();
-		$ob->power=$powerp;
-		$ob->index=$pindex;
+		$ob->power=(int)$powerp;
+		$ob->index=(int)$pindex;
 		$ob->shell=$pshell;
 		$fun_list->$namep=$ob;
 	}else
@@ -117,8 +117,8 @@ if( isset($_POST['addshell']) && isset($_POST['namep'])  &&
 	$pindex=$_POST['pindex'];
 	$pshell=$_POST['pshell'];
 	$ob=new shell_ob();
-	$ob->power=$powerp;
-	$ob->index=$pindex;
+	$ob->power=(int)$powerp;
+	$ob->index=(int)$pindex;
 	$ob->shell=$pshell;
 	begin_write_config();
 	$fun_list->$namep=$ob;

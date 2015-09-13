@@ -2,12 +2,20 @@
  "address":"192.168.23.131:8009",
  "account":{
   "zhulangren@gmail.com":{
-   "power":"0",
+   "power":0,
    "passwd":"664933f1166d868ba2a3e941936563c7"
   },
   "zhulangren1@gmail.com":{
-   "power":"4",
+   "power":1,
    "passwd":"18ebf8e5e18d79893c4fc42babbbe071"
+  },
+  "afd@dsf.com":{
+   "power":2,
+   "passwd":"c00b83af74649fb6847089f85d4031b4"
+  },
+  "fdsfdfdfadsf@dff.com":{
+   "power":2,
+   "passwd":"3b1e0dacace138afe2a2c9d395d1e6d1"
   }
  },
  "shell":{
@@ -23,12 +31,17 @@
   },
   "外网数据":{
    "power":1,
-   "index":3,
+   "index":4,
    "shell":".\/tool\/longtime.sh"
   },
   "本地Server更新":{
-   "power":"2",
-   "index":"5",
+   "power":2,
+   "index":6,
+   "shell":".\/tool\/longtime.sh"
+  },
+  "本地Server更新1":{
+   "power":2,
+   "index":5,
    "shell":".\/tool\/longtime.sh"
   }
  },

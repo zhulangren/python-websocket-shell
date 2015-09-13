@@ -21,6 +21,8 @@ if sys.getdefaultencoding() != default_encoding:
     sys.setdefaultencoding(default_encoding)
 
 
+
+
 # Called for every client connecting (after handshake)
 def new_client(client, server):
 	address="a new client has joined us ip:%s port:%d\n" % (client['address'])
@@ -31,6 +33,17 @@ def new_client(client, server):
 def client_left(client, server):
 	print("Client(%d) disconnected" % client['id'])
 
+
+
+def reload_config():
+	global cmd_dic,account_dic,shell_dic,exclude_cmd
+	s= get_config_data()
+	cmd_dic=s['servershell']
+	account_dic=s['account']
+	shell_dic=s['shell']
+	exclude_cmd=s['exclude_cmd']
+	logging.debug("重新获取账号配置数据")
+	return
 
 
 def get_config_data():
@@ -78,7 +91,7 @@ def message_dispatch(client,message,issingle):
 		if(pids=="" or issingle==False):
 			logstr="account:%s ip:%s cmd:%s" %(client['account'],client['address'],message)
 			logging.debug(logstr)
-			server.send_message(client,"%\n" % logstr)
+			server.send_message(client,"%s\n" % (logstr))
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
 			while subp.poll()==None:
 				for line in iter(subp.stdout.readline,''):
@@ -111,21 +124,16 @@ def message_received(client, server, message):
 		m.update(tokenstr)
 		ptoken=m.hexdigest()
 		#logging.debug("token:%s,ptoken:%s,time:%d,str:%s\n" % (token,ptoken,time.time(), tokenstr))
-		global cmd_dic,account_dic,shell_dic,exclude_cmd
+		global account_dic
 		if(ptoken==token):
 			if(account_dic.has_key(account)==False):
-				s= get_config_data()
-				cmd_dic=s['servershell']
-				account_dic=s['account']
-				shell_dic=s['shell']
-				exclude_cmd=s['exclude_cmd']
-				logging.debug("重新获取账号配置数据")
+				reload_config()
 			if(account_dic.has_key(account)==False):
 				logging.debug("账号不存在")
 				return
 
 			client['account']=account
-			client['power']=account_dic[account]['power'];
+			client['power']=int(account_dic[account]['power']);
 			client['islogin']=True
 		return
 	if(client['islogin']==False):
@@ -151,7 +159,11 @@ def message_received(client, server, message):
 			return
 
 		if shell_power!=client['power'] and client['power'] !=0:
-			logging.debug("don't have the power!!!!")
+			#重新加载一遍数据如果权限还是不对就退出
+			reload_config()
+			client['power']=int(account_dic[client['account']]['power'])
+		if shell_power!=client['power'] and client['power'] !=0:
+			logging.debug("don't have the power!!!! %s " % client['power'])
 			return
 	elif bison_id=='cmd':
 		if client['power']!=0:
