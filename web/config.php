@@ -98,6 +98,15 @@ if( isset($_POST['editshell']) && isset($_POST['namep'])  &&
 		$ob->power=(int)$powerp;
 		$ob->index=(int)$pindex;
 		$ob->shell=$pshell;
+		foreach ($fun_list as $key => $value) {
+			if($value->index== $ob->index)
+			{//删除掉相同索引的脚本
+				unset($fun_list->$key);
+			}
+		}
+
+
+
 		$fun_list->$namep=$ob;
 	}else
 	{
@@ -116,6 +125,20 @@ if( isset($_POST['addshell']) && isset($_POST['namep'])  &&
 	$powerp=$_POST['powerp'];
 	$pindex=$_POST['pindex'];
 	$pshell=$_POST['pshell'];
+
+	foreach ($fun_list as $key => $value) {
+		if($value->index== (int)$pindex)
+		{
+			echo "-1";
+			return;
+		}
+		if($namep==$key)
+		{
+			echo "-2";
+			return;
+		}
+	}
+
 	$ob=new shell_ob();
 	$ob->power=(int)$powerp;
 	$ob->index=(int)$pindex;
@@ -126,10 +149,6 @@ if( isset($_POST['addshell']) && isset($_POST['namep'])  &&
 
 
 }
-
-//检测index是否唯一
-
-//文件枷锁访问
 
 
 class account_ob 

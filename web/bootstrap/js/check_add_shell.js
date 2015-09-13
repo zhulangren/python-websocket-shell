@@ -27,6 +27,15 @@ $(document).ready(function(){
                 bshell=$("#Shell").val();
                 //alert("数值显示:"+bname+bpower+bindex+bshell);
                 $.post("config.php",{addshell:"addshell", namep:bname,powerp:bpower,pindex:bindex,pshell:bshell},function(data,status){
+                    if(data=="-1")
+                    {
+                        alert("与已知脚本索引重复");
+                        return false;
+                    }else if(data=="-2")
+                    {
+                        alert("与已知脚本名称重复");
+                        return false;                        
+                    }
                     window.location.reload();
                 });
             }else{
