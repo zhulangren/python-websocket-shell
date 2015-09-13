@@ -87,13 +87,27 @@
       log.value = escaped + log.value ;
     }
 
+    <?php
+    $super_script=<<<EOF
     function onCmd() {
       var input = document.getElementById("cmd");
       // You can send message to the Web Socket using ws.send.
       ws.send("cmd@:" +input.value);
-      output("send: " + input.value+"\n");
+      output("send: " + input.value+"\\n");
     }
+    function onSuperAdmin()
+    {
+        location.href="shell_manager.php";
+    }
+EOF;
+    if($power==0)
+    {
+      echo $super_script;
+    }
+    ?>
 
+
+    
   </script>
 
 
@@ -144,6 +158,7 @@ $super_form=<<<EOF
     <input id="cmd" type="text" class="form-control" placeholder="type your cmd" aria-describedby="basic-addon1">
      <span class="input-group-btn">
         <button class="btn btn-danger" type="submit">执行</button>
+        <button class="btn btn-info" type="button" id="super_admin" onclick="onSuperAdmin();return false;">管理</button>
       </span>
 
   </div>

@@ -2,24 +2,16 @@
  "address":"192.168.23.131:8009",
  "account":{
   "zhulangren@gmail.com":{
-   "power":0,
+   "power":"0",
    "passwd":"664933f1166d868ba2a3e941936563c7"
   },
   "abc@gmail.com":{
-   "power":1,
+   "power":"4",
    "passwd":"2033e2f959353307488e86af0a567f8a"
-  },
-  "guest@gmail.com":{
-   "power":2,
-   "passwd":"fbe2747b739feca0509c6aca382d57ab"
   },
   "zhulangren1@gmail.com":{
    "power":2,
    "passwd":"18ebf8e5e18d79893c4fc42babbbe071"
-  },
-  "zhulangren3@gmail.com":{
-   "power":2,
-   "passwd":"ea7734172e0fb74fa510dde48d236100"
   }
  },
  "shell":{
@@ -43,10 +35,10 @@
    "index":4,
    "shell":".\/tool\/longtime.sh"
   },
-  "外网Server更新":{
-   "power":1,
-   "index":5,
-   "shell":".\/tool\/longtime.sh"
+  "ls":{
+   "power":"6",
+   "index":"6",
+   "shell":"ls \/work"
   }
  },
  "exclude_cmd":[

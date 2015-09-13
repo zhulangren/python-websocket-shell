@@ -34,6 +34,10 @@ if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren']
 
 
 
+
+
+
+
 if(isset($_SESSION['account']))
 {
   $account=$_SESSION['account'];
@@ -47,12 +51,107 @@ $accounts=$config_data->account;
 $address=$config_data->address;
 
 
+
+//修改账号权限或者删除账号
+if( isset($_POST['editaccount']) && isset($_POST['accountp']) && isset($_POST['powerp']) && isset($_POST['btnp']))
+{
+	$accountp=$_POST['accountp'];
+	$powerp=$_POST['powerp'];
+	$haschange=false;
+	if($_POST['btnp']=='ae')
+	{//修改权限
+		if(property_exists($accounts,$accountp) && $accounts->$accountp->power !=$powerp && (int)$powerp >=0)
+		{
+			$accounts->$accountp->power=$powerp;
+			$haschange=true;
+		}
+	}else
+	{
+		if(property_exists($accounts,$accountp))
+		{
+			unset( $accounts->$accountp);
+			$haschange=true;
+		}
+	}
+	if($haschange==true)
+	{
+		Global $config_data;
+		$myfile = fopen("./config.json", "w");
+		$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
+		fwrite($myfile, indent($json));
+		fclose($myfile);
+	}
+}
+
+
+//修改或删除脚本路径
+//addshell:"addshell",namep:bname,powerp:bpower,indexp:bindex,shellp:bshell,btnp:btn
+if( isset($_POST['editshell']) && isset($_POST['namep'])  &&
+ isset($_POST['powerp']) && isset($_POST['indexp'])&& isset($_POST['shellp']) && isset($_POST['btnp']))
+{
+	Global $fun_list;
+	$namep=urldecode($_POST['namep']);
+	$powerp=$_POST['powerp'];
+	$pindex=$_POST['indexp'];
+	$pshell=$_POST['shellp'];
+	$btnp=$_POST['btnp'];
+	if($btnp=='be')
+	{
+		$ob=new shell_ob();
+		$ob->power=$powerp;
+		$ob->index=$pindex;
+		$ob->shell=$pshell;
+		$fun_list->$namep=$ob;
+	}else
+	{
+		unset($fun_list->$namep);
+	}
+
+	Global $config_data;
+	$myfile = fopen("./config.json", "w");
+	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
+	fwrite($myfile, indent($json));
+	fclose($myfile);
+}
+
+//添加shell addshell:"addshell" namep:bname,powerp:bpower,pindex:bindex,pshell:bshell
+if( isset($_POST['addshell']) && isset($_POST['namep'])  &&
+ isset($_POST['powerp']) && isset($_POST['pindex'])&& isset($_POST['pshell']))
+{
+
+	$namep=urldecode($_POST['namep']);
+	$powerp=$_POST['powerp'];
+	$pindex=$_POST['pindex'];
+	$pshell=$_POST['pshell'];
+	$ob=new shell_ob();
+	$ob->power=$powerp;
+	$ob->index=$pindex;
+	$ob->shell=$pshell;
+	$fun_list->$namep=$ob;
+
+	
+	$myfile = fopen("./config.json", "w");
+	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
+	fwrite($myfile, indent($json));
+	fclose($myfile);
+}
+
+//检测index是否唯一
+
+//文件枷锁访问
+
+
 class account_ob 
 {
 	var $power;
 	var $passwd;
 }
-
+class shell_ob
+{
+	var $power;
+	var $index;
+	var $shell;
+}
 
 function indent ($json) { 
 	$result = ''; 
