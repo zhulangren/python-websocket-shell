@@ -78,7 +78,7 @@ def message_dispatch(client,message,issingle):
 		if(pids=="" or issingle==False):
 			logstr="account:%s ip:%s cmd:%s" %(client['account'],client['address'],message)
 			logging.debug(logstr)
-			server.send_message(client,logstr)
+			server.send_message(client,"%\n" % logstr)
 			subp=subprocess.Popen(message,shell=True,stdout=subprocess.PIPE)
 			while subp.poll()==None:
 				for line in iter(subp.stdout.readline,''):

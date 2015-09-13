@@ -6,6 +6,7 @@ session_start();
 $account="guest@gmail.com";
 $bison_key="2da2d990f2abad8-f0f6d6e46556d7-9ad";
 $filename = "./config.json";
+$write_config_fd=0;
 $logger = Logger::getRootLogger();
 Logger::configure(dirname(__FILE__).'/log4php.properties');
 if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren'] ))
@@ -24,7 +25,7 @@ if(isset($_POST['token']) && isset($_POST['time']) && isset($_POST['zhulangren']
 	}else
 	{
 		$res['flag']=0;
-		$res['data']=json_decode(file_get_contents($filename));
+		$res['data']=json_decode(read_config_json());
 		$res['data']->servershell=get_server_shell($res['data']->shell);
 	}
 	print(json_encode($res,JSON_UNESCAPED_UNICODE));
@@ -43,7 +44,7 @@ if(isset($_SESSION['account']))
   $account=$_SESSION['account'];
 }
 
-$json_string = file_get_contents($filename);
+$json_string = read_config_json();
 $config_data=json_decode($json_string);
 
 $fun_list=$config_data->shell;
@@ -58,6 +59,8 @@ if( isset($_POST['editaccount']) && isset($_POST['accountp']) && isset($_POST['p
 	$accountp=$_POST['accountp'];
 	$powerp=$_POST['powerp'];
 	$haschange=false;
+	begin_write_config();
+
 	if($_POST['btnp']=='ae')
 	{//修改权限
 		if(property_exists($accounts,$accountp) && $accounts->$accountp->power !=$powerp && (int)$powerp >=0)
@@ -73,14 +76,7 @@ if( isset($_POST['editaccount']) && isset($_POST['accountp']) && isset($_POST['p
 			$haschange=true;
 		}
 	}
-	if($haschange==true)
-	{
-		Global $config_data;
-		$myfile = fopen("./config.json", "w");
-		$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
-		fwrite($myfile, indent($json));
-		fclose($myfile);
-	}
+	end_write_config();
 }
 
 
@@ -95,6 +91,7 @@ if( isset($_POST['editshell']) && isset($_POST['namep'])  &&
 	$pindex=$_POST['indexp'];
 	$pshell=$_POST['shellp'];
 	$btnp=$_POST['btnp'];
+	begin_write_config();
 	if($btnp=='be')
 	{
 		$ob=new shell_ob();
@@ -106,12 +103,8 @@ if( isset($_POST['editshell']) && isset($_POST['namep'])  &&
 	{
 		unset($fun_list->$namep);
 	}
-
-	Global $config_data;
-	$myfile = fopen("./config.json", "w");
-	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
-	fwrite($myfile, indent($json));
-	fclose($myfile);
+	end_write_config();
+	
 }
 
 //添加shell addshell:"addshell" namep:bname,powerp:bpower,pindex:bindex,pshell:bshell
@@ -127,13 +120,11 @@ if( isset($_POST['addshell']) && isset($_POST['namep'])  &&
 	$ob->power=$powerp;
 	$ob->index=$pindex;
 	$ob->shell=$pshell;
+	begin_write_config();
 	$fun_list->$namep=$ob;
+	end_write_config();
 
-	
-	$myfile = fopen("./config.json", "w");
-	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
-	fwrite($myfile, indent($json));
-	fclose($myfile);
+
 }
 
 //检测index是否唯一
@@ -199,7 +190,6 @@ function indent ($json) {
 function regestuser($email,$passwd)
 {
 	Global $accounts;
-	Global $config_data;
 	if(property_exists($accounts,$email))
 	{
 		echo "0";
@@ -210,14 +200,12 @@ function regestuser($email,$passwd)
 	$mypwd=md5($mypwd);
 
 
-	$myfile = fopen("./config.json", "w");
 	$ob=new account_ob();
 	$ob->passwd=$mypwd;
 	$ob->power=2;
+	begin_write_config();
 	$accounts->$email=$ob;
-	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
-	fwrite($myfile, indent($json));
-	fclose($myfile);
+	end_write_config();
 	echo "1";
 	return 1;
 }
@@ -225,7 +213,6 @@ function regestuser($email,$passwd)
 function change_passwd($email,$passwdold,$passwdnew)
 {
 	Global $accounts;
-	Global $config_data;
 	if(property_exists($accounts,$email)==false)
 	{//账号不存在
 		echo "0";
@@ -242,12 +229,10 @@ function change_passwd($email,$passwdold,$passwdnew)
 	//修改密码
 	$mypwd="${bison_key}${email}${passwdnew}";
 	$mypwd=md5($mypwd);
+	begin_write_config();
 	$accounts->$email->passwd=$mypwd;
+	end_write_config();
 
-	$myfile = fopen("./config.json", "w");
-	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
-	fwrite($myfile, indent($json));
-	fclose($myfile);
 	echo "2";
 	return 0;
 
@@ -305,6 +290,66 @@ function check_login($accountp,$pwd)
 	
 
 	return true;
+}
+
+
+//配置文件读写
+
+function read_config_json()
+{
+	Global $filename;
+	$fd = fopen($filename, "r"); 
+	$retries = 1;
+	while(!flock($fd, LOCK_SH) && $retries < 100) {    //对文件加锁,尝试100次
+	    $retries += 1;
+	}
+	if($retries >= 100) {
+		$logger->debug("管理员正在修改配置文件，请稍后登陆");
+		$_SESSION['islogin']=false;
+		header("location: login.html");
+	    return "";
+	}
+
+	$json_string= fread($fd, filesize($filename)); 
+	flock($fd, LOCK_UN); 
+	fclose($fd); 
+	return $json_string;
+}
+
+//开始修改之前先刷新内存数据，对文件进行加锁,两个函数一定要配对出现
+function begin_write_config()
+{
+	Global $filename,$write_config_fd;
+	Global $config_data,$fun_list,$accounts,$address;
+	Global $logger;
+
+	$json_string= read_config_json();
+	$config_data=json_decode($json_string);
+	$fun_list=$config_data->shell;
+	$accounts=$config_data->account;
+	$address=$config_data->address;
+	$write_config_fd = fopen($filename, "w+"); 
+	$retries = 1;
+	while(!flock($write_config_fd, LOCK_NB |LOCK_EX) && $retries < 100) {    //对文件加锁,尝试100次
+	    $retries += 1;
+	}
+	if($retries >= 100) {
+		$logger->debug("其他人正在修改配置文件，请稍后登陆");
+		$_SESSION['islogin']=false;
+		header("location: login.html");
+	    return false;
+	}
+
+	
+	return true;
+}
+function end_write_config()
+{
+	Global $config_data,$write_config_fd;
+	$json=json_encode($config_data,JSON_UNESCAPED_UNICODE);
+	fwrite($write_config_fd, indent($json));
+	flock($write_config_fd, LOCK_UN); 
+	fclose($write_config_fd); 
 }
 
 ?>
