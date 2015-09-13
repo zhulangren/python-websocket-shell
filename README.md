@@ -42,7 +42,7 @@ https://github.com/Pithikos/python-websocket-server.git
 
 1. 	将python-websocket-shell/web目录设置为网站的根目录
 2. 	删掉没必要的账号，注册新的账号，修改账号权限，数值越小权限越大，0是超级用户可以自由执行命令，不过这个“自由”仍然有限制
-3. 	修改web/config.json对应的列表id和脚本路径
+3. 	修改web/config.json对应的列表id和脚本路径,脚本对应的权限值
 4. 	修改web/config.json的adrress为server.py监听的ip和端口，JavaScript要根据它与python服务器建立websocket连接
 5. 	./start.sh 启动websocket的服务端
 6. 	修改nginx的配置不允许访问config.json，现在即使允许访问也看不到密码，为防止暴力破解密码还是不允许的好
@@ -57,7 +57,19 @@ web目录为root的nginx配置写法如下，location后面的位置是从web的
 		return 404; 
 	} 
 	
-apache的配置请自行百度
+apache的配置
+
+	<Directory "/Library/WebServer/Documents">
+	    Options FollowSymLinks Multiviews
+	    MultiviewsMatch Any
+	    AllowOverride None
+	    Require all granted
+	    <Files ~ "\.json$">
+	       Order allow,deny
+	       Deny from all
+	    </Files>
+	</Directory>
+
 
 之所以没选择数据库来配置只是为了让网站更容易配置，本项目的初衷就是为了更方便的让普通用户访问脚本
 
