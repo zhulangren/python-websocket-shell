@@ -4,13 +4,13 @@ Websocket Shell
  
  web客户端可以通过注册账号和修改密码修改config.json的账号的信息
  
- 账号权限信息和可执行命令由管理员手动修改
+ 账号权限信息和可执行命令由超级用户在管理界面修改
  
  python通过配置文件config.cfg配置的url路径读取config.json的内容，主要用于校验
  
  在python运行期间如果有新注册账户登录就重新读取url内容
 
- 这里解释一下用到的两个bison_key(一定要修改成你自己的不然我能悄悄的访问你的机器，哈哈)
+ 这里解释一下用到的两个bison_key
 
  config.php用到的key主要用来加密密码和配置数据的接口，python获取数据的时候要用到同样的key
  
@@ -30,7 +30,7 @@ https://github.com/Pithikos/python-websocket-server.git
 之前一直想让普通用户在未获得linux账号的前提下执行一些linux或mac上的shell
 如服务器更新，app发布，配置数据更新等
 
-此前的做法一直是winscp或putty脚本来实现，缺点是不安全，账户和密码都在明文的脚本里边放着
+此前的做法一直是winscp或putty脚本来实现，缺点是不安全也不够灵活，账户和密码都在明文的脚本里边放着
 
 本项目解决了这个问题，普通用户通过点击网页就可以完成执行命令的操作了
 跟jenkins(http://jenkins-ci.org/ )的功能可能有重合，有时间了我去试下，不过这个项目更轻便一些
@@ -42,7 +42,7 @@ https://github.com/Pithikos/python-websocket-server.git
 
 1. 	将python-websocket-shell/web目录设置为网站的根目录
 2. 	删掉没必要的账号，注册新的账号，修改账号权限，数值越小权限越大，0是超级用户可以自由执行命令，不过这个“自由”仍然有限制
-3. 	修改web/config.json对应的列表id和脚本路径,脚本对应的权限值
+3. 	超级用户通过管理页面修改脚本对应的权限值
 4. 	修改web/config.json的adrress为server.py监听的ip和端口，JavaScript要根据它与python服务器建立websocket连接
 5. 	./start.sh 启动websocket的服务端
 6. 	修改nginx的配置不允许访问config.json，现在即使允许访问也看不到密码，为防止暴力破解密码还是不允许的好
