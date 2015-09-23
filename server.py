@@ -158,11 +158,11 @@ def message_received(client, server, message):
 			logging.debug("don't have the shell %s!!!!" % (bison_str[1]))
 			return
 
-		if shell_power!=client['power'] and client['power'] !=0:
+		if shell_power < client['power'] and client['power'] !=0:
 			#重新加载一遍数据如果权限还是不对就退出
 			reload_config()
 			client['power']=int(account_dic[client['account']]['power'])
-		if shell_power!=client['power'] and client['power'] !=0:
+		if shell_power < client['power'] and client['power'] !=0:
 			logging.debug("don't have the power!!!! %s " % client['power'])
 			return
 	elif bison_id=='cmd':
